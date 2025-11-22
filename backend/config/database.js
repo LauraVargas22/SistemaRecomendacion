@@ -1,11 +1,21 @@
 const { Pool } = require('pg');
 
 const pool = new Pool({
-    user: process.env.DB_USER || 'postgres',
-    host: process.env.DB_HOST || 'localhost',
-    database: process.env.DB_NAME || 'recommendation_db',
-    password: process.env.DB_PASSWORD || 'password',
-    port: process.env.DB_PORT || 5432,
+    user: 'postgres',
+    host: 'localhost',
+    database: 'recommendation_db',
+    password: 'Lau05032015', 
+    port: 5432,
+});
+
+// Probar la conexión
+pool.connect((err, client, release) => {
+    if (err) {
+        console.error('❌ Error conectando a la base de datos:', err.stack);
+    } else {
+        console.log('✅ Conectado a PostgreSQL - Base de datos: recommendation_db');
+        release();
+    }
 });
 
 module.exports = pool;
