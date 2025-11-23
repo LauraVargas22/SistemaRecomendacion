@@ -1,130 +1,75 @@
 import React from 'react';
-import { Bar, Scatter } from 'react-chartjs-2';
-import {
-    Chart as ChartJS,
-    CategoryScale,
-    LinearScale,
-    BarElement,
-    PointElement,
-    Title,
-    Tooltip,
-    Legend,
-    LineElement
-} from 'chart.js';
-
-ChartJS.register(
-    CategoryScale,
-    LinearScale,
-    BarElement,
-    PointElement,
-    Title,
-    Tooltip,
-    Legend,
-    LineElement
-);
 
 const VectorVisualization = ({ userVectors, similarities, selectedUser }) => {
     if (!userVectors || userVectors.length === 0) {
-        return <div>No hay datos de vectores para visualizar</div>;
+        return (
+            <div className="vector-visualization">
+                <p>No hay datos de vectores para visualizar</p>
+            </div>
+        );
     }
 
-    // Datos para gráfica de barras de vectores
-    const vectorChartData = {
-        labels: userVectors[0]?.movies || [],
-        datasets: userVectors.map((userVector, index) => ({
-            label: `Usuario ${userVector.userId}`,
-            data: userVector.ratings,
-            backgroundColor: `hsl(${index * 60}, 70%, 50%)`,
-            borderColor: `hsl(${index * 60}, 70%, 30%)`,
-            borderWidth: 1,
-        }))
+    // Gráfica simple de similitudes usando divs
+    const renderSimilarityBars = () => {
+        return (
+            <div className="similarity-bars">
+                <h4>Similitud entre Usuarios</h4>
+                {similarities.map(sim => (
+                    <div key={sim.user_id} className="similarity-item">
+                        <div className="user-info">
+                            <strong>Usuario {sim.user_id}</strong>
+                            <span className="similarity-value">
+                                {sim.similarity.toFixed(4)} 
+                                <span className="percentage">({sim.similarity_percentage})</span>
+                            </span>
+                        </div>
+                        <div className="similarity-bar-container">
+                            <div 
+                                className="similarity-bar"
+                                style={{ 
+                                    width: `${sim.similarity * 100}%`,
+                                    backgroundColor: `hsl(${sim.similarity * 120}, 70%, 50%)`
+                                }}
+                            ></div>
+                        </div>
+                    </div>
+                ))}
+            </div>
+        );
     };
 
-    const vectorChartOptions = {
-        responsive: true,
-        plugins: {
-            title: {
-                display: true,
-                text: 'Vectores de Calificaciones por Usuario'
-            },
-            tooltip: {
-                callbacks: {
-                    label: function(context) {
-                        return `${context.dataset.label}: ${context.parsed.y}⭐`;
-                    }
-                }
-            }
-        },
-        scales: {
-            y: {
-                beginAtZero: true,
-                max: 5,
-                title: {
-                    display: true,
-                    text: 'Calificación'
-                }
-            },
-            x: {
-                title: {
-                    display: true,
-                    text: 'Películas'
-                }
-            }
-        }
-    };
+    // Mostrar vectores como texto
+    const renderVectorsText = () => {
+        const targetUser = userVectors.find(u => u.userId === selectedUser);
+        if (!targetUser) return null;
 
-    // Datos para gráfica de similitudes
-    const similarityChartData = {
-        labels: similarities.map(sim => `Usuario ${sim.user_id}`),
-        datasets: [
-            {
-                label: 'Similitud del Coseno',
-                data: similarities.map(sim => sim.similarity),
-                backgroundColor: similarities.map(sim => 
-                    `hsl(${sim.similarity * 120}, 70%, 50%)`
-                ),
-                borderColor: similarities.map(sim => 
-                    `hsl(${sim.similarity * 120}, 70%, 30%)`
-                ),
-                borderWidth: 1,
-            }
-        ]
-    };
-
-    const similarityChartOptions = {
-        responsive: true,
-        plugins: {
-            title: {
-                display: true,
-                text: 'Similitud entre Usuarios (Producto Punto Normalizado)'
-            }
-        },
-        scales: {
-            y: {
-                beginAtZero: true,
-                max: 1,
-                title: {
-                    display: true,
-                    text: 'Similitud del Coseno'
-                }
-            }
-        }
+        return (
+            <div className="vector-details">
+                <h4>Vector del Usuario {selectedUser}</h4>
+                <div className="vector-values">
+                    {targetUser.ratings.slice(0, 10).map((rating, index) => (
+                        <span key={index} className="vector-value">
+                            {rating > 0 ? `${rating}⭐` : '·'}
+                        </span>
+                    ))}
+                    {targetUser.ratings.length > 10 && (
+                        <span className="vector-ellipsis">... (+{targetUser.ratings.length - 10} más)</span>
+                    )}
+                </div>
+                <p className="vector-magnitude">
+                    <strong>Magnitud del vector:</strong> {targetUser.vectorMagnitude}
+                </p>
+            </div>
+        );
     };
 
     return (
         <div className="vector-visualization">
             <h3>📊 Visualización de Vectores y Producto Punto</h3>
             
-            <div className="charts-grid">
-                <div className="chart-container">
-                    <h4>Vectores de Calificaciones</h4>
-                    <Bar data={vectorChartData} options={vectorChartOptions} />
-                </div>
-                
-                <div className="chart-container">
-                    <h4>Similitud entre Usuarios</h4>
-                    <Bar data={similarityChartData} options={similarityChartOptions} />
-                </div>
+            <div className="vector-content">
+                {renderVectorsText()}
+                {renderSimilarityBars()}
             </div>
 
             <div className="vector-explanation">
