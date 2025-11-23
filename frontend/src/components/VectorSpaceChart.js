@@ -13,12 +13,12 @@ const VectorSpaceChart = ({ userVectors, selectedUser }) => {
     const renderVectorTable = () => {
         return (
             <div className="vector-table">
-                <h4>Vectores de Usuarios (Primeras 5 dimensiones)</h4>
+                <h4>Vectores de Usuarios</h4>
                 <table className="vector-matrix">
                     <thead>
                         <tr>
                             <th>Usuario</th>
-                            {userVectors[0]?.ratings?.slice(0, 5).map((_, index) => (
+                            {userVectors[0]?.ratings?.slice(0, 6).map((_, index) => (
                                 <th key={index}>Dim {index + 1}</th>
                             ))}
                             <th>Magnitud</th>
@@ -32,7 +32,7 @@ const VectorSpaceChart = ({ userVectors, selectedUser }) => {
                                     <strong>Usuario {userVector.username}</strong>
                                     {userVector.userId === selectedUser && ' (TÚ)'}
                                 </td>
-                                {userVector.ratings.slice(0, 5).map((rating, idx) => (
+                                {userVector.ratings.slice(0, 6).map((rating, idx) => (
                                     <td key={idx} className="rating-cell">
                                         {rating > 0 ? `${rating}⭐` : '0'}
                                     </td>

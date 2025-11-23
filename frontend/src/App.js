@@ -272,18 +272,6 @@ function App() {
                             )}
                         </div>
                     )}
-
-                    {!selectedUser && (
-                        <div className="welcome-message">
-                            <h2>Bienvenido al Sistema de Recomendación</h2>
-                            <p>Selecciona un usuario para ver sus recomendaciones personalizadas</p>
-                            <div className="database-info">
-                                <h3>🗃️ Base de Datos Conectada</h3>
-                                <p>Usuarios disponibles: {users.length}</p>
-                                <p>Sistema usando datos reales de PostgreSQL</p>
-                            </div>
-                        </div>
-                    )}
                 </div>
             </main>
         </div>

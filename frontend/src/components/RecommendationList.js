@@ -26,10 +26,6 @@ const RecommendationList = ({ recommendations, isLoading }) => {
                                     <strong>Rating Predicho:</strong> 
                                     {rec.predicted_rating.toFixed(2)}
                                 </div>
-                                <div className="confidence">
-                                    <strong>Confianza:</strong> 
-                                    {rec.confidence.toFixed(2)}
-                                </div>
                             </div>
                             <div className="similarity-bar">
                                 <div 
